@@ -32,9 +32,9 @@ RUR.runner.run = function (playback) {
         RUR.set_current_world(RUR.clone_world(RUR.WORLD_AFTER_ONLOAD));
         RUR.world_init();
 
-        if (!(RUR.state.programming_language === "python" && RUR.state.highlight) ) {
+        if (!RUR.state.highlight) {
             RUR.record_frame();  // record the starting state as first frame;
-            // for python with highlighting on, the first frame will be the first
+            // if highlighting on, the first frame will be the first
             // instruction to be executed highlighted.
         }
 
@@ -52,26 +52,27 @@ RUR.runner.run = function (playback) {
         fatal_error_found = RUR.runner.eval(editor.getValue()); // jshint ignore:line
     }
     $("#thought").hide();
-    if (!fatal_error_found) {
-        // save program so that it a new browser session can use it as
-        // starting point.
-        try {
-            localStorage.setItem("editor", editor.getValue());
-            localStorage.setItem("library", library.getValue());
-        } catch (e) {}
-        // "playback" is a function called to play back the code in a sequence of frames
-        // or a "null function", f(){} can be passed if the code is not
-        // dependent on the robot world.
-        if (RUR.state.prevent_playback) {
-            return;
-        }
-        playback();
+
+    // save program so that it a new browser session can use it as
+    // starting point.
+    try {
+        localStorage.setItem("editor", editor.getValue());
+        localStorage.setItem("library", library.getValue());
+    } catch (e) {}
+    // "playback" is a function called to play back the code in a sequence of frames
+    // or a "null function", f(){} can be passed if the code is not
+    // dependent on the robot world.
+    if (RUR.state.prevent_playback) {
+        return;
     }
+    playback();
+
 };
 
 /* RUR.runner.eval returns true if a fatal error is found, false otherwise */
 RUR.runner.eval = function(src) {  // jshint ignore:line
-    var message, response, other_info, from_python, error;
+    "use strict";
+    var message, response, other_info, error;
     other_info = '';
 
     /* At some point around version 3.2.0, Brython changed the way it
@@ -82,59 +83,92 @@ RUR.runner.eval = function(src) {  // jshint ignore:line
        guard against any future changes by doing our own handling. */
 
     RUR.__python_error = false;
+    RUR.__cpp_error = false;
+    RUR.__reeborg_failure = false;
+    RUR.__reeborg_success = false;
     try {
         if (RUR.state.programming_language === "javascript") {
             RUR.runner.eval_javascript(src);
+        } else if (RUR.state.programming_language === "coffeescript") {
+            RUR.runner.eval_coffeescript(src);
         } else if (RUR.state.programming_language === "python") {
             RUR.runner.eval_python(src);
             // This is the error handling referenced in the above comment.
             if (RUR.__python_error) {
                 throw RUR.__python_error;
             }
+        } else if (RUR.state.programming_language === "cpp") {
+            RUR.runner.eval_cpp(src);
         } else {
-            alert("FATAL ERROR: Unrecognized programming language.");
+            alert("FATAL ERROR: Unrecognized programming language. " + RUR.state.programming_language);
             return true;
         }
     } catch (e) {
+        console.log("error caught");
+        console.log(e);
+
         RUR.state.code_evaluated = true;
         if (RUR.__debug){
             console.dir(e);
+            console.log(RUR.frames);
         }
         error = {};
-        if (e.reeborg_concludes !== undefined) {  // indicates success
-            error.message = e.reeborg_concludes;
+        if (e.reeborg_success) {
+            error.reeborg_success = e.reeborg_success;
+        } else if (RUR.__reeborg_success) {
+            error.reeborg_success = RUR.__reeborg_success;
+        }
+
+        if (e.reeborg_failure) {
+            error.reeborg_failure = e.reeborg_failure;
+        } else if (RUR.__reeborg_failure) {
+            error.reeborg_failure = RUR.__reeborg_failure;
+        }
+        
+        if (error.reeborg_success) {
             error.name = "ReeborgOK";
             if (RUR.state.prevent_playback) {
-                RUR.show_feedback("#Reeborg-concludes", e.reeborg_concludes);
+                RUR.show_feedback("#Reeborg-success", error.reeborg_success);
             } else {
                 RUR.record_frame("error", error);
             }
             return false; // since success, not a fatal error.
         }
+
         if (RUR.state.programming_language === "python") {
-            error.reeborg_shouts = e.reeborg_shouts;
             response = RUR.runner.simplify_python_traceback(e);
             message = response.message;
             other_info = response.other_info;
             error.name = response.error_name;
+            let translated_error;
+            translated_error = RUR.translate(message);
             error.message = "<h3>" + error.name + "</h3><p>" +
-                                    message + "</p><p>" + other_info + '</p>';
+                translated_error + "</p><p>" + other_info + '</p>';
+            if (RUR.state.prevent_playback) {
+                RUR.show_feedback("#Reeborg-success", e.reeborg_success);
+            } else {
+                RUR.record_frame("error", error);
+            }
+            if (error.name === "ReeborgOK") return false;
+            if (error.name === "ReeborgError") return false;
+            if (error.name === "MissingObjectError") return false;
+            if (error.name === "WallCollisionError") return false;
         } else {
             error.name = e.name;
             message = e.message;
             other_info = '';
-            if (e.reeborg_shouts !== undefined) {
-                error.message = e.reeborg_shouts;
-                error.reeborg_shouts = e.reeborg_shouts;
+            if (e.reeborg_failure !== undefined) {
+                error.message = e.reeborg_failure;
+                error.reeborg_failure = e.reeborg_failure;
             }
         }
 
-        if (e.reeborg_shouts !== undefined){
+        if (error.reeborg_failure !== undefined){
             RUR.record_frame("error", error);
         } else {
-            RUR.show_feedback("#Reeborg-shouts",
-                                    "<h3>" + error.name + "</h3><p>" +
-                                    message + "</p><p>" + other_info + '</p>');
+            RUR.record_frame("error", {message:"<h3>" + error.name + "</h3><p>" +
+                                    message + "</p><p>" + other_info + '</p>'});
+            $("#Reeborg-success").dialog("close");
             return true;
         }
     }
@@ -142,24 +176,55 @@ RUR.runner.eval = function(src) {  // jshint ignore:line
     return false;
 };
 
-
-RUR.runner.eval_javascript = function (src) {
-    // do not "use strict"
+insert_world_code = function(src){
     var pre_code, post_code;
     pre_code = pre_code_editor.getValue();
     post_code = post_code_editor.getValue();
+    // In the absence of pre_code and post_code, if a parsing error
+    // occurs, we want the line number to be accurate; otherwise,
+    // we insert new lines characters just to ensure that
+    // the code is valid.
+    if (pre_code){
+        pre_code = pre_code + "\n";
+    }
+    if (post_code){
+        post_code = "\n" + post_code;
+    }
+    return pre_code + src + post_code;
+}
+
+RUR.runner.eval_javascript = function (src) {
+    // do not "use strict"
     RUR.reset_definitions();
-    src = pre_code + "\n" + src + "\n" + post_code;
+    var post_code = post_code_editor.getValue();
+    src = insert_world_code(src);
+
     try {
         eval(src); // jshint ignore:line
     } catch (e) {
-        if (RUR.state.done_executed){
+        if (RUR.state.done_executed){ // user code stopped before post_code was evaluated
             eval(post_code); // jshint ignore:line
         }
         throw e;// throw original message from Done if nothing else is raised
     } 
 };
 
+RUR.runner.eval_coffeescript = function (src) {
+    // do not "use strict"
+    RUR.reset_definitions();
+    var post_code = post_code_editor.getValue();
+    src = insert_world_code(src);
+
+    try {
+        eval(CoffeeScript.compile(src, {bare: true})); // jshint ignore:line
+    } catch (e) {
+        if (RUR.state.done_executed){ // user code stopped before post_code was evaluated
+            eval(post_code); // jshint ignore:line
+        }
+        throw e;// throw original message from Done if nothing else is raised
+    } 
+
+};
 
 RUR.runner.eval_python = function (src) {
     // do not  "use strict"
@@ -170,13 +235,75 @@ RUR.runner.eval_python = function (src) {
     translate_python(src, RUR.state.highlight, RUR.state.watch_vars, pre_code, post_code);
 };
 
+RUR.runner.eval_cpp = function (src) {    
+    // do not "use strict"
+    const definitions = RUR.reset_definitions();
+    var post_code = post_code_editor.getValue();
+    var pre_code = pre_code_editor.getValue();
+
+    RUR.reset_definitions();
+    eval(pre_code);
+
+    // stopExecutionFlag = false;
+    const config = {
+        reeborg: definitions,
+        debug: false,
+        stdio: {
+            finishCallback: function(exitCode) {
+                console.log(`JSCPP: program exited with code " + ${exitCode};`);
+            },
+            promiseError: function(promise_error) {
+                try{ // highlight problematic line if a Syntax Error occurs
+                    var lineno = promise_error.split(":")[0];
+                    if (parseInt(lineno)) {
+                        RUR.set_lineno_highlight([lineno - 1]);
+                    }
+                } catch(e){}
+                if (!RUR.state.done_executed){
+                    RUR.__reeborg_failure = true;
+                    RUR.record_frame("error", {message:promise_error});
+                }
+            },
+            write: function(s) {
+                console.log(`JSCPP: ${s}`);
+                RUR.write(s);
+            }
+        },
+        set_lineno_highlight: function(lineno) {
+            RUR.set_lineno_highlight([lineno - 1]);
+        },
+        // stopExecutionCheck: function() {
+        //     return stopExecutionFlag;
+        // },
+        //maxExecutionSteps: (100 * 100) * 10, // (lines of code * loop iterations) * 10 times buffer
+        maxTimeout: 3 * 60 * 1000, // 3 mins
+        eventLoopSteps: 10_000,
+        unsigned_overflow: "error"
+    };
+    
+    try {
+        // stopExecutionFlag = false;
+        JSCPP.run(src, () => Promise.resolve(), config);
+        eval(post_code);
+    } catch (error) {
+        if (RUR.state.done_executed){
+            eval(post_code);
+        }
+        RUR.record_frame("error", error);
+        throw error;
+    }
+    if (RUR.state.done_executed){
+        throw new RUR.ReeborgError(RUR.translate("Done!"));
+    }
+};
+
 RUR.runner.simplify_python_traceback = function(e) {
     "use strict";
     var message, error_name, other_info, diagnostic, parts;
     other_info = '';
-    if (e.reeborg_shouts === undefined) {
+    if (e.reeborg_failure === undefined) {
         message = e.args[0];
-        error_name = e.__name__;
+        error_name = e.__name__ || e.__class__.__name__;
         diagnostic = '';
         switch (error_name) {
             case "SyntaxError":
@@ -240,7 +367,7 @@ RUR.runner.simplify_python_traceback = function(e) {
                 other_info = "";
         }
     } else {
-        message = e.reeborg_shouts;
+        message = e.reeborg_failure;
         if (e.__name__ === undefined) {
             error_name = "ReeborgError";
         } else {
@@ -278,7 +405,8 @@ RUR.runner.find_line_number = function(bad_code) {
 
 
 RUR.runner.check_colons = function(line_of_code) {
-    var tokens, line, nb_token;
+    "use strict";
+    var tokens, nb_token;
     tokens = ['if ', 'if(', 'else', 'elif ','elif(','while ','while(',
               'for ','for(', 'def '];
     for (nb_token=0; nb_token < tokens.length; nb_token++){

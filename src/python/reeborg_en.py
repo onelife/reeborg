@@ -477,7 +477,7 @@ class UsedRobot(object):  #py:UR
                             "n" or "north", "s" or "south", or "random".
                tokens: Initial number of tokens to give to the robot;
                        its value must be a positive integer, or the string
-                       "Infinity" to indicate an infinite quantity.
+                       "infinite" to indicate an infinite quantity.
 
                other: any other keyword argument will be taken as a number of
                       objects to give to a robot.
@@ -787,12 +787,13 @@ class ReeborgOK(Exception):  #py:RE
     """
 
     def __init__(self, message):  #py:RE.__init__
-        self.reeborg_concludes = message
+        self.reeborg_success = message
+        RUR.__reeborg_success = message
         self.message = message
         super().__init__(message)
 
     def __str__(self):  #py:RE.__str__
-        return self.reeborg_concludes
+        return self.reeborg_success
 try:
     window['ReeborgOK_en'] = ReeborgOK
     window['ReeborgOk_en'] = ReeborgOK # preventing an annoying typo
@@ -819,12 +820,13 @@ class ReeborgError(Exception):  #py:RE
     """
 
     def __init__(self, message):  #py:RE.__init__
-        self.reeborg_shouts = message
+        self.reeborg_failure = message
+        RUR.__reeborg_failure = message
         self.message = message
         super().__init__(message)
 
     def __str__(self):  #py:RE.__str__
-        return self.reeborg_shouts
+        return self.reeborg_failure
 try:
     window['ReeborgError_en'] = ReeborgError
 except:

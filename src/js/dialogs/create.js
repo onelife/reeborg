@@ -42,11 +42,11 @@ RUR.create_and_activate_dialogs = function(button, element, add_options, special
 $(document).ready( function () {
     RUR.create_and_activate_dialogs($("#more-menus-button"), $("#more-menus"), {height:700});
     RUR.create_and_activate_dialogs($("#special-keyboard-button"), $("#special-keyboard"),
-            {autoOpen:false, width:750,  height:330, maximize: false, position:"left"});
+            {autoOpen:false, width:750, height:400, maximize: false, position:"left"});
 
-    $("#Reeborg-concludes").dialog({minimize: false, maximize: false, autoOpen:false, width:500, dialogClass: "concludes",
+    $("#Reeborg-success").dialog({minimize: false, maximize: false, autoOpen:false, width:500, dialogClass: "concludes",
                                     position:{my: "left", at: "left", of: $("#editor-panel")}});
-    $("#Reeborg-shouts").dialog({minimize: false, maximize: false, autoOpen:false, width:500, dialogClass: "alert",
+    $("#Reeborg-failure").dialog({minimize: false, maximize: false, autoOpen:false, width:500, dialogClass: "alert",
                                     position:{my: "left", at: "left", of: $("#editor-panel")}});
     $("#Reeborg-writes").dialog({minimize: false, maximize: false, autoOpen:false, width:800, height:350,
                                     position:{my: "bottom", at: "bottom-20", of: window}});

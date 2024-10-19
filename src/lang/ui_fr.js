@@ -140,7 +140,7 @@ ui_fr[" is not a valid value!"] = " n'est pas une valeur valide!";
 ui_fr["Enter number of objects desired at that location."] = "Cliquez sur le monde pour fixer le nombre d'objet <code>{obj}</code> désiré à cet endroit.";
 ui_fr["Objects found here:"] = "Objets trouvés ici:";
 ui_fr["Description"] = "Description";
-ui_fr["A robot located here carries no objects."] = "A robot situé à (x, y) = ({x}, {y}) ne transporte aucun objet.";
+ui_fr["A robot located here carries no objects."] = "Un robot situé à (x, y) = ({x}, {y}) ne transporte aucun objet.";
 ui_fr["A robot located here carries:"] = "Un robot situé à (x, y) = ({x}, {y}) transporte:";
 ui_fr["random location"] = "une position choisie au hasard";
 ui_fr["Enter number of objects to give to robot."] = "Quel nombre de <code>{obj}</code> voulez-vous donner au robot?";
@@ -160,6 +160,7 @@ ui_fr["Enter url of image to use as background."] = "Fournir l'adresse (URL) de 
 ui_fr["Replace editor content"] = "Voulez-vous remplacer le contenu du code de votre éditeur par celui défini par le créateur du monde?";
 ui_fr["Replace library content"] = "Voulez-vous remplacer le contenu du code de votre biliothèque par celui défini par le créateur du monde?";
 ui_fr["colour"] = "couleur";
+ui_fr["There is already a bridge here."] = "Il y a déjà un pont ici.";
 
 ui_fr["Name already exist; confirm that you want to replace its content."] = "Ce nom existe déjà; confirmez que vous voulez remplacer son contenu.";
 ui_fr["No such world!"] = "Ce monde n'existe pas !";
@@ -342,6 +343,8 @@ ui_fr["kbd-condition-btn"] = "Conditions";
 ui_fr["kbd-python-btn"] = "Python";
 ui_fr["kbd-py-console-btn"] = "Python";
 ui_fr["kbd-javascript-btn"] = "Javascript";
+ui_fr["kbd-cpp-btn"] = "C++";
+ui_fr["kbd-coffee-btn"] = "CoffeeScript";
 ui_fr["kbd-objects-btn"] = "Objets";
 ui_fr["kbd-special-btn"] = "Spécial";
 

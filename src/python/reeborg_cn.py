@@ -447,7 +447,7 @@ class 机器人(object):  #py:UR
                 "random"。
 
             笑脸：机器人所携带的笑脸的初始数量，必须是一个正整数或字符串
-                "Infinity" 表示无穷数量。
+                "infinite" 表示无穷数量。
 
             其它：其它任何关键字参数（keyword argument）将被视为给与
                 机器人的物品。
@@ -735,12 +735,12 @@ class ReeborgOK(Exception):  #py:RE
     """
 
     def __init__(self, message):  #py:RE.__init__
-        self.reeborg_concludes = message
+        self.reeborg_success = message
         self.message = message
         super().__init__(message)
 
     def __str__(self):  #py:RE.__str__
-        return self.reeborg_concludes
+        return self.reeborg_success
 try:
     window['ReeborgOK_cn'] = ReeborgOK
     window['ReeborgOk_cn'] = ReeborgOK # preventing an annoying typo
@@ -767,12 +767,12 @@ class ReeborgError(Exception):  #py:RE
     """
 
     def __init__(self, message):  #py:RE.__init__
-        self.reeborg_shouts = message
+        self.reeborg_failure = message
         self.message = message
         super().__init__(message)
 
     def __str__(self):  #py:RE.__str__
-        return self.reeborg_shouts
+        return self.reeborg_failure
 try:
     window['ReeborgError_cn'] = ReeborgError
 except:

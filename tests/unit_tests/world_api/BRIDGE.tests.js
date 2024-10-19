@@ -36,7 +36,6 @@ test('is_add_remove', function (assert) {
 
 
 test('replacing a bridge', function (assert) {
-    var identical = require("../../../src/js/utils/identical.js").identical;
     require("../../../src/js/world_api/bridges.js");
     assert.plan(4);
     RUR.set_current_world(RUR.create_empty_world());
@@ -48,7 +47,7 @@ test('replacing a bridge', function (assert) {
         RUR.add_bridge('a', 2, 3);
     } catch (e) {
         assert.equal(e.message, "There is already a bridge here.", "error message");
-        assert.equal(e.reeborg_shouts, "There is already a bridge here.", "reeborg_shouts");
+        assert.equal(e.reeborg_failure, "There is already a bridge here.", "reeborg_failure");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     // however, no error should be raised if evaluating onload.
@@ -60,7 +59,6 @@ test('replacing a bridge', function (assert) {
 });
 
 test('adding unknown bridge', function (assert) {
-    var out;
     assert.plan(3);
     silencer.reset();
     silencer.disable('warn');
@@ -72,14 +70,13 @@ test('adding unknown bridge', function (assert) {
         RUR.add_bridge('a bridge', 2, 3);
     } catch (e) {
         assert.equal(e.message, "Invalid name: a bridge", "error message");
-        assert.equal(e.reeborg_shouts, "Invalid name: a bridge", "reeborg_shouts");
+        assert.equal(e.reeborg_failure, "Invalid name: a bridge", "reeborg_failure");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();
 });
 
 test('Attempting to remove missing bridge', function (assert) {
-    var out;
     assert.plan(3);
     silencer.reset();
     silencer.disable('warn');
@@ -91,14 +88,13 @@ test('Attempting to remove missing bridge', function (assert) {
         RUR.remove_bridge('a bridge', 2, 3, {number:4});
     } catch (e) {
         assert.equal(e.message, 'No bridge named <code>a bridge</code> to remove here.', "error message");
-        assert.equal(e.reeborg_shouts, 'No bridge named <code>a bridge</code> to remove here.', "reeborg_shouts");
+        assert.equal(e.reeborg_failure, 'No bridge named <code>a bridge</code> to remove here.', "reeborg_failure");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();
 });
 
 test('Attempting to remove named bridge different from the one present', function (assert) {
-    var out;
     assert.plan(3);
     silencer.reset();
     silencer.disable('warn');
@@ -111,7 +107,7 @@ test('Attempting to remove named bridge different from the one present', functio
         RUR.remove_bridge('a bridge', 2, 3, {number:4});
     } catch (e) {
         assert.equal(e.message, 'No bridge named <code>a bridge</code> to remove here.', "error message");
-        assert.equal(e.reeborg_shouts, 'No bridge named <code>a bridge</code> to remove here.', "reeborg_shouts");
+        assert.equal(e.reeborg_failure, 'No bridge named <code>a bridge</code> to remove here.', "reeborg_failure");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();

@@ -59,15 +59,15 @@ test('RUR.add_new_thing: adding tile with no goal attribute', function (assert) 
     assert.end();
 });
 
-test('RUR.add_new_thing: error raised if name attribute missing.'), function (assert) {
+test('RUR.add_new_thing: error raised if name attribute missing.', function (assert) {
     var obj={}, message;
-    message = "RUR.add_new_thing(new_tile): new_tile.name attribute missing.";
+    message = "RUR.add_new_thing(thing): thing.name attribute missing.";
     try {
         RUR.add_new_thing(obj);
     } catch (e) {
         assert.equal(e.message, message, "error message ok");
-        assert.equal(e.reeborg_shouts, message, "reeborg_shouts ok");
+        assert.equal(e.reeborg_failure, message, "reeborg_failure ok");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();
-}
+});

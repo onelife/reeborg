@@ -59,7 +59,6 @@ test('adding and removing fixed number of known object as goal', function (asser
 });
 
 test('adding fixed number for two different objects and removing one type', function (assert) {
-    var identical = require("../../../src/js/utils/identical.js").identical;
     RUR.CURRENT_WORLD = RUR.create_empty_world();
     RUR.KNOWN_THINGS = ['a', 'b'];
     RUR.untranslated['a'] = true;
@@ -72,7 +71,6 @@ test('adding fixed number for two different objects and removing one type', func
 });
 
 test('adding fixed number for two different objects as goal and removing one type', function (assert) {
-    var identical = require("../../../src/js/utils/identical.js").identical;
     RUR.CURRENT_WORLD = RUR.create_empty_world();
     RUR.KNOWN_THINGS = ['a', 'b'];
     RUR.untranslated['a'] = true;
@@ -85,7 +83,6 @@ test('adding fixed number for two different objects as goal and removing one typ
 });
 
 test('adding unknown object', function (assert) {
-    var out;
     assert.plan(3);
     silencer.reset();
     silencer.disable('warn');
@@ -97,14 +94,13 @@ test('adding unknown object', function (assert) {
         RUR.add_object('a', 2, 3, {number:4});
     } catch (e) {
         assert.equal(e.message, "Invalid name: a", "error message");
-        assert.equal(e.reeborg_shouts, "Invalid name: a", "reeborg_shouts");
+        assert.equal(e.reeborg_failure, "Invalid name: a", "reeborg_failure");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();
 });
 
 test('removing unknown object', function (assert) {
-    var out;
     assert.plan(3);
     silencer.reset();
     silencer.disable('warn');
@@ -116,7 +112,7 @@ test('removing unknown object', function (assert) {
         RUR.add_object('an object', 2, 3, {number:4});
     } catch (e) {
         assert.equal(e.message, "Invalid name: an object", "error message");
-        assert.equal(e.reeborg_shouts, "Invalid name: an object", "reeborg_shouts");
+        assert.equal(e.reeborg_failure, "Invalid name: an object", "reeborg_failure");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();
@@ -129,7 +125,7 @@ test('invalid x value', function (assert) {
     try {
         RUR.add_object('a', 0, 3, {number:4});
     } catch (e) {
-        assert.ok(e.reeborg_shouts, "reeborg_shouts ok");
+        assert.ok(e.reeborg_failure, "reeborg_failure ok");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();
@@ -142,7 +138,7 @@ test('invalid y value', function (assert) {
     try {
         RUR.add_object('a', 3, -1, {number:4});
     } catch (e) {
-        assert.ok(e.reeborg_shouts,"reeborg_shouts ok");
+        assert.ok(e.reeborg_failure,"reeborg_failure ok");
         assert.equal(e.name, "ReeborgError", "error name ok");
     }
     assert.end();

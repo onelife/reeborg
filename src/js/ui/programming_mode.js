@@ -51,6 +51,8 @@ RUR.onload_set_programming_language = function(language) {
             RUR.state.input_method == "blockly-js")) {
             RUR.onload_set_programming_mode("javascript");
         }
+    }  else if (language == "coffeescript") {
+        RUR.onload_set_programming_mode("coffeescript");
     } else {
         RUR.onload_set_programming_mode("python");
     }
@@ -109,6 +111,24 @@ RUR.listeners['programming-mode'] = function () {
     hide_everything();
 
     switch(choice) {
+        case "cpp":
+            RUR.state.programming_language = "cpp";
+            $("#editor-tab").html(RUR.translate("C++ Code"));
+            show_editor("cpp");
+            editor.setOption("readOnly", false);
+            editor.setOption("theme", "reeborg-dark");
+            try {
+                $("#kbd-undo").show();
+                $("#kbd-redo").show();
+            } catch(e) {}
+
+        // re-use element
+        $("#mixed-language-info").html(
+            "<pre>#include &lt;reeborg&gt;\n" +
+            "int main(){...\nreturn 0;}</pre>");
+        $("#mixed-language-info").show();
+
+            break;
         case "python":
             RUR.state.programming_language = "python";
             $("#editor-tab").html(RUR.translate("Python Code"));
@@ -124,6 +144,17 @@ RUR.listeners['programming-mode'] = function () {
             RUR.state.programming_language = "javascript";
             $("#editor-tab").html(RUR.translate("Javascript Code"));
             show_editor("javascript");
+            editor.setOption("readOnly", false);
+            editor.setOption("theme", "reeborg-dark");
+            try {
+                $("#kbd-undo").show();
+                $("#kbd-redo").show();
+            } catch(e) {}
+            break;
+        case "coffeescript":
+            RUR.state.programming_language = "coffeescript";
+            $("#editor-tab").html(RUR.translate("Coffeescript Code"));
+            show_editor("coffeescript");
             editor.setOption("readOnly", false);
             editor.setOption("theme", "reeborg-dark");
             try {
@@ -201,6 +232,7 @@ function hide_everything () {
         $("#kbd-undo").hide();
         $("#kbd-redo").hide();
     } catch(e) {}
+    $("#mixed-language-info").hide();
 
 }
 
@@ -232,6 +264,10 @@ function hide_blockly () {
 function show_editor(lang) {
     if (lang == "python") {
         show_python_editor();
+    } else if (lang == "coffeescript") {
+        show_coffee_editor();
+    } else if (lang == "cpp") {
+        show_cpp_editor();
     } else {
         show_javascript_editor();
     }
@@ -255,6 +291,23 @@ function show_javascript_editor () {
     onload_editor.setOption("mode", "javascript"); // could be changed in import_world
     pre_code_editor.setOption("mode", "javascript");
     post_code_editor.setOption("mode", "javascript");
+}
+
+function show_cpp_editor() {
+    editor.setOption("mode", "text/x-c++src");
+    onload_editor.setOption("mode", "text/x-c++src"); // could be changed in import_world
+    pre_code_editor.setOption("mode", "text/x-c++src");
+    post_code_editor.setOption("mode", "text/x-c++src");
+    
+    RUR.state.highlight = RUR.state.highlight || RUR.state._saved_highlight_value;
+    $("#highlight").show();
+}
+
+function show_coffee_editor () {
+    editor.setOption("mode", "coffeescript");
+    onload_editor.setOption("mode", "coffeescript"); // could be changed in import_world
+    pre_code_editor.setOption("mode", "coffeescript");
+    post_code_editor.setOption("mode", "coffeescript");
 }
 
 function show_python_editor () {

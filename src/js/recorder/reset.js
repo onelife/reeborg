@@ -4,7 +4,7 @@ require("./../world_utils/import_world.js"); // for process_onload
 require("./../drawing/visible_robot.js"); // for RUR.reset_default_robot_images
 
 RUR.reset_world = function() {
-    var world;
+    var i;
     RUR.reset_pre_run_defaults();
     $("#thought").hide(); // just in case
     RUR.success_custom_message = undefined;
@@ -20,8 +20,7 @@ RUR.reset_world = function() {
 
     clearTimeout(RUR._TIMER);
 
-    if (RUR.state.programming_language === "python" &&
-        RUR.state.highlight) {
+    if (RUR.state.highlight) {
         for (i=0; i < editor.lineCount(); i++){
             editor.removeLineClass(i, 'background', 'editor-highlight');
         }
@@ -32,6 +31,5 @@ RUR.reset_world = function() {
     }
 
     RUR.set_current_world(RUR.clone_world(RUR.WORLD_BEFORE_ONLOAD));
-    world = RUR.get_current_world();
     RUR.world_utils.process_onload();
 };

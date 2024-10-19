@@ -39,9 +39,6 @@ require("./utils/path_utils.js");
 require("./world_api/decorative_objects.js");
 
 brython({debug:1, pythonpath:[RUR.BASE_URL + '/src/python']});
-if (__BRYTHON__.__MAGIC__ != "3.6.2") {
-    alert("Expecting Brython version 3.6.2 and got " + __BRYTHON__.__MAGIC__);
-}
 
 function probably_invalid(value) {
     return value === undefined || value === null || value == "null" || value == "undefined";
@@ -51,7 +48,7 @@ RUR.state.session_initialized = false;
 
 function start_session () {
     "use strict";
-    var url, name;
+    var url;
     set_initial_state();
     set_editor();
     set_library();
@@ -95,7 +92,7 @@ function set_initial_state() {
            3. site defaults.
             
     */
-    var url_query, last_name, last_url, url;
+    var url_query;
 
     url_query = RUR.permalink.parseUri(window.location.href);
     if (url_query.queryKey === undefined) {  // should be set but just in case...
@@ -249,7 +246,7 @@ function _restore_blockly () {
     xml_text = localStorage.getItem("blockly");
     if (xml_text) {
         xml = Blockly.Xml.textToDom(xml_text);
-        Blockly.Xml.domToWorkspace(RUR.blockly.workspace, xml);
+        Blockly.Xml.domToWorkspace(xml, RUR.blockly.workspace);
     }
 }
 

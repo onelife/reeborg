@@ -1,101 +1,138 @@
 {
   "robots": [
     {
-      "x": 2,
-      "y": 4,
-      "objects": {},
-      "model": "classic",
-      "_orientation": 0,
-      "_is_leaky": true,
-      "_prev_x": 2,
-      "_prev_y": 4,
+      "x": 1,
+      "y": 5,
+      "_prev_x": 1,
+      "_prev_y": 5,
       "_prev_orientation": 0,
+      "objects": {},
+      "_orientation": 0,
+      "start_positions": [
+        [
+          1,
+          1
+        ]
+      ],
+      "_is_leaky": true,
       "_trace_history": [],
       "_trace_style": "default",
       "_trace_color": "seagreen",
-      "__id": 2,
+      "__id": 10,
+      "model": "classic",
       "possible_initial_positions": [
         [
-          2,
-          4
+          1,
+          5
         ]
       ]
     }
   ],
+  "description": [
+    "<h1>Žvyrkeliu</h1>",
+    "<p>Panaudokite funkcijas, kurias jau sužinojote taip, kad Robotukas eitų žvyrkeliu,",
+    " ir rinktų pienes, kai tik jų randa, ",
+    "ir dėtų jas į įrengtas šiukšliadėžes",
+    " (pavaizduotas pilkos spalvos pienių paveikslėliais). Naudokite <code>pauzė</code> ",
+    " funkciją, kad Robotukas palauktų kiekvienoje vietoje, kurioje randa pienę. ",
+    "Būtinai naudokite komentarus, kad padidintumėte savo sprendimo skaitomumą! ",
+    "<h3>Ką reikia žinoti</h3>",
+    "<ul><li>Funkcijos <code>pirmyn()</code>, <code>suktis_kairėn()</code>,",
+    "<code>paimti()</code>, <code>padėti()</code> ir <code>pauzė()</code>.</li></ul>",
+    "DIFFICULTY1",
+    ""
+  ],
+  "small_tiles": false,
+  "rows": 10,
+  "cols": 10,
+  "goal": {
+    "objects": {
+      "8,7": {
+        "dandelion": 1
+      },
+      "3,5": {},
+      "4,2": {},
+      "6,2": {
+        "dandelion": 1
+      }
+    },
+    "possible_final_positions": [
+      [
+        6,
+        1
+      ]
+    ],
+    "position": {
+      "image": "racing_flag",
+      "x": 6,
+      "y": 1
+    }
+  },
   "walls": {
-    "2,3": [
+    "2,5": [
       "north"
     ],
     "2,4": [
-      "east"
-    ],
-    "1,4": [
-      "east"
-    ],
-    "1,5": [
-      "east"
-    ],
-    "1,6": [
-      "east"
-    ],
-    "2,6": [
       "north"
     ],
-    "2,5": [
-      "east"
+    "3,4": [
+      "north"
     ],
     "3,5": [
-      "east",
       "north"
     ],
     "3,6": [
+      "east"
+    ],
+    "3,7": [
+      "east"
+    ],
+    "4,7": [
       "north"
     ],
-    "4,6": [
+    "5,7": [
+      "north"
+    ],
+    "4,4": [
+      "north"
+    ],
+    "7,4": [
+      "north"
+    ],
+    "8,4": [
+      "north"
+    ],
+    "8,5": [
+      "east"
+    ],
+    "8,6": [
+      "east"
+    ],
+    "8,7": [
       "east",
       "north"
     ],
-    "4,5": [
-      "east"
-    ],
-    "4,4": [
-      "east"
-    ],
-    "3,4": [
-      "east"
-    ],
-    "3,3": [
-      "east"
-    ],
-    "3,2": [
-      "east"
-    ],
-    "4,1": [
+    "7,7": [
       "north"
     ],
-    "4,3": [
-      "east"
-    ],
-    "5,2": [
+    "6,7": [
       "north"
     ],
-    "5,1": [
+    "4,6": [
+      "east"
+    ],
+    "5,6": [
       "north"
     ],
-    "6,1": [
+    "6,6": [
       "north"
     ],
-    "6,2": [
+    "7,6": [
+      "north",
       "east"
     ],
-    "6,3": [
-      "east"
-    ],
-    "5,3": [
-      "east"
-    ],
-    "5,4": [
-      "east"
+    "7,5": [
+      "north"
     ],
     "5,5": [
       "east"
@@ -103,41 +140,35 @@
     "6,5": [
       "north"
     ],
-    "7,5": [
-      "east",
-      "north"
+    "4,5": [
+      "east"
+    ],
+    "5,4": [
+      "east"
     ],
     "6,4": [
       "east"
     ],
-    "7,4": [
-      "north"
+    "5,3": [
+      "east"
+    ],
+    "6,3": [
+      "east"
+    ],
+    "6,2": [
+      "east"
+    ],
+    "5,2": [
+      "east"
     ]
   },
-  "description": [
-    "<h1>Another path to follow</h1>",
-    "<p>Create a <code>turn_right()()</code> function and use it to walk along the path.</p>",
-    "",
-    "<h3>What you need to know</h3>",
-    "<ul><li>The functions <code>move()</code> and <code>turn_left()</code>.</li>",
-    "<li>How to define functions.</li></ul>",
-    "DIFFICULTY2",
-    ""
-  ],
-  "small_tiles": false,
-  "rows": 10,
-  "cols": 10,
-  "goal": {
-    "possible_final_positions": [
-      [
-        7,
-        5
-      ]
-    ],
-    "position": {
-      "image": "racing_flag",
-      "x": 7,
-      "y": 5
+  "objects": {
+    "3,5": {},
+    "8,5": {
+      "dandelion": 1
+    },
+    "4,7": {
+      "dandelion": 1
     }
   },
   "tiles": {
@@ -181,13 +212,13 @@
       "grass"
     ],
     "2,4": [
-      "gravel"
+      "grass"
     ],
     "2,5": [
       "gravel"
     ],
     "2,6": [
-      "gravel"
+      "grass"
     ],
     "2,7": [
       "grass"
@@ -214,10 +245,10 @@
       "grass"
     ],
     "3,5": [
-      "grass"
+      "gravel"
     ],
     "3,6": [
-      "gravel"
+      "grass"
     ],
     "3,7": [
       "grass"
@@ -235,13 +266,13 @@
       "grass"
     ],
     "4,2": [
-      "gravel"
+      "grass"
     ],
     "4,3": [
-      "gravel"
+      "grass"
     ],
     "4,4": [
-      "gravel"
+      "grass"
     ],
     "4,5": [
       "gravel"
@@ -250,7 +281,7 @@
       "gravel"
     ],
     "4,7": [
-      "grass"
+      "gravel"
     ],
     "4,8": [
       "grass"
@@ -265,7 +296,7 @@
       "grass"
     ],
     "5,2": [
-      "gravel"
+      "grass"
     ],
     "5,3": [
       "grass"
@@ -280,7 +311,7 @@
       "grass"
     ],
     "5,7": [
-      "grass"
+      "gravel"
     ],
     "5,8": [
       "grass"
@@ -292,7 +323,7 @@
       "grass"
     ],
     "6,1": [
-      "grass"
+      "gravel"
     ],
     "6,2": [
       "gravel"
@@ -310,7 +341,7 @@
       "grass"
     ],
     "6,7": [
-      "grass"
+      "gravel"
     ],
     "6,8": [
       "grass"
@@ -340,7 +371,7 @@
       "grass"
     ],
     "7,7": [
-      "grass"
+      "gravel"
     ],
     "7,8": [
       "grass"
@@ -364,13 +395,13 @@
       "grass"
     ],
     "8,5": [
-      "grass"
+      "gravel"
     ],
     "8,6": [
-      "grass"
+      "gravel"
     ],
     "8,7": [
-      "grass"
+      "gravel"
     ],
     "8,8": [
       "grass"

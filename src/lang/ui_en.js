@@ -127,6 +127,7 @@ ui_en["Enter url of image to use as background."] = "Enter url of image to use a
 ui_en["Replace editor content"] = "Do you wish to replace your editor code by that provided by the creator of this world?";
 ui_en["Replace library content"] = "Do you wish to replace your library code by that provided by the creator of this world?";
 ui_en["colour"] = "colour";
+ui_en["There is already a bridge here."] = "There is already a bridge here.";
 
 ui_en["Name already exist; confirm that you want to replace its content."] = "Name already exist; confirm that you want to replace its content.";
 ui_en["No such world!"] = "No such world!";
@@ -305,6 +306,8 @@ ui_en["kbd-condition-btn"] = "Conditions";
 ui_en["kbd-python-btn"] = "Python";
 ui_en["kbd-py-console-btn"] = "Python";
 ui_en["kbd-javascript-btn"] = "Javascript";
+ui_en["kbd-cpp-btn"] = "C++";
+ui_en["kbd-coffee-btn"] = "CoffeeScript";
 ui_en["kbd-objects-btn"] = "Objects";
 ui_en["kbd-special-btn"] = "Special";
 

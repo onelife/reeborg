@@ -10,7 +10,7 @@
   <link rel="shortcut icon" href="src/images/favicon.ico" type="image/icon">
   <link rel="icon" href="src/images/favicon.ico" type="image/icon">
   <link defer href="src/css/jquery-ui.custom.min.css" rel="stylesheet">
-  <!--online<link defer href='http://fonts.googleapis.com/css?family=Roboto+Mono:700' rel='stylesheet' type='text/css'>/online-->
+  <!--online<link defer href='//fonts.googleapis.com/css?family=Roboto+Mono:700' rel='stylesheet' type='text/css'>/online-->
 
    <!--offline--> <style>
   @font-face {
@@ -29,7 +29,7 @@
   </style> <!--/offline-->
 
   <!--offline--> <link rel="stylesheet" href="offline/codemirror-5.8.0/lib/codemirror.css"> <!--/offline-->
-  <!--online<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.css">/online-->
+  <!--online<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.css">/online-->
   <link defer rel="stylesheet" href="src/css/reeborg_world2.css">
   <!-- load after codemirror.css -->
   <title>Reeborg's World</title>
@@ -38,6 +38,7 @@
     RUR.DEFAULT_MENU_EN = '/worlds/menus/select_collection_en.json';
     RUR.DEFAULT_MENU_FR = '/worlds/menus/select_collection_fr.json';
     RUR.DEFAULT_MENU_CN = '/worlds/menus/select_collection_cn.json';
+    RUR.DEFAULT_MENU_KO = '/worlds/menus/select_collection_ko.json';
   </script>
 </head>
 <body>
@@ -52,7 +53,9 @@
       <button class="blue-gradient" id="world-info-button"></button>
       <select id="programming-mode" title="Select programming mode">
         <option value="python">Python</option>
-        <option value="javascript">Javascript</option>
+        <option value="javascript">JavaScript</option>
+        <option value="coffeescript">CoffeeScript</option>
+        <option value="cpp">C++</option>
         <option value="blockly-py">Blockly (Py)</option>
         <option value="blockly-js">Blockly (Js)</option>
         <option value="py-repl">REPL (Py)</option>
@@ -62,16 +65,24 @@
       <button class="blue-gradient" id="special-keyboard-button"></button>
       <button id="more-menus-button" class="blue-gradient"></button>
       <select id="human-language" title="Select UI language">
+        <option value="de">Deutsch</option>
         <option value="en">English</option>
         <option value="fr">Français</option>
+        <option value="lt">Lithuanian</option>
+        <option value="pl">Polski</option>
+        <option value="pt">Português</option>
         <option value="cn">中文</option>
+        <option value="ko">한국어</option>
         <optgroup label="------------">
-          <option class="select-mixed" value="ko-en">한국어 + en</option>
-          <option class="select-mixed" value="pl-en">Polski + en</option>
+          <option class="select-mixed" value="de-en">Deutsch + en</option>
           <option class="select-mixed" value="fr-en">Français + en</option>
+          <option class="select-mixed" value="pl-en">Polski + en</option>
+          <option class="select-mixed" value="pt-en">Português + en</option>
+          <option class="select-mixed" value="ko-en">한국어 + en</option>
           <option class="select-mixed" value="cn-en">中文 + en</option>
           <option class="select-mixed" value="en-fr">English + fr</option>
           <option class="select-mixed" value="en-cn">English + 中文</option>
+          <option class="select-mixed" value="en-ko">English + 한국어</option>
         </optgroup>
       </select>
     </div>
@@ -107,6 +118,7 @@
       <block type="_if_"></block>
       <block type="_if_else_"></block>
       <block type="_if_else_if_else_"></block>
+      <block type="controls_if"></block>
     </category>
     <category id="blockly-conditions" name="Conditions" colour="240">
       <block type="_at_goal_"></block>
@@ -203,11 +215,11 @@
       <canvas id="robot-anim-canvas" width="625" height="550"></canvas> <!-- 20 -->
       <canvas id="tooltip" width=40 height=40></canvas>
     </div>
-    <div id="Reeborg-concludes" class="reeborg-print" title="Reeborg says: I'm done!" style="display:none"></div>
+    <div id="Reeborg-success" class="reeborg-print" title="Reeborg says: I'm done!" style="display:none"></div>
     <div id="Reeborg-writes" title="Reeborg writes:" style="display:none">
       <pre id="stdout" class="reeborg-print"></pre>
     </div>
-    <div id="Reeborg-shouts" class="reeborg-print" title="Reeborg shouts: Something is wrong!" style="display:none"></div>
+    <div id="Reeborg-failure" class="reeborg-print" title="Reeborg shouts: Something is wrong!" style="display:none"></div>
     <div id="Reeborg-explores" title="Reeborg explores some Javascript code" style="display:none"></div>
     <div id="Reeborg-proclaims" title="Reeborg states:" style="display:none">
       <div id="print-html"></div>
@@ -569,35 +581,42 @@
       </li>
     </ul>
   </div>
-    <!--online<script type="text/javascript" src="http://cdn.rawgit.com/brython-dev/brython/3.6.2/www/src/brython.js"></script>/online-->
+    <!--online<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.12.1/brython.min.js"></script>/online-->
   <!--offline--> <script type="text/javascript" src="offline/brython/brython.js"></script> <!--/offline-->
 
-  <!--online<script type="text/javascript" src="http://cdn.rawgit.com/brython-dev/brython/3.6.2/www/src/brython_stdlib.js"></script>/online-->
+  <!--online<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.12.1/brython_stdlib.js"></script>/online-->
   <!--offline--> <script type="text/javascript" src="offline/brython/brython_stdlib.js"></script> <!--/offline-->
 
+<script type="text/javascript" src="offline/coffee/coffeescript.js"></script>
+<script type="text/javascript" src="offline/jscpp/JSCPP.js"></script>
+
   <!--offline--> <script type="text/javascript" src="offline/jquery-2.1.0/jquery.min.js"></script> <!--/offline-->
-  <!--online<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>/online-->
+  <!--online<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>/online-->
 
   <!--offline--> <script type="text/javascript" src="offline/jqueryui-1.10.4/jquery-ui.min.js"></script> <!--/offline-->
-  <!--online<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>/online-->
+  <!--online<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>/online-->
 
   <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/lib/codemirror.js"></script> <!--/offline-->
-  <!--online<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>/online-->
+  <!--online<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>/online-->
 
   <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/javascript/javascript.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/javascript/javascript.min.js"></script>/online-->
+  <!--online<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/javascript/javascript.min.js"></script>/online-->
+
+  <!--online<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/coffeescript/coffeescript.min.js"></script>/online-->
 
   <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/xml/xml.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/xml/xml.min.js"></script>/online-->
+  <!--online<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/xml/xml.min.js"></script>/online-->
 
   <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/css/css.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/css/css.min.js"></script>/online-->
+  <!--online<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/css/css.min.js"></script>/online-->
 
   <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/htmlmixed/htmlmixed.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/htmlmixed/htmlmixed.min.js"></script>/online-->
+  <!--online<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/htmlmixed/htmlmixed.min.js"></script>/online-->
 
   <!--offline--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/python/python.js"></script> <!--/offline-->
-  <!--online<script defer type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/python/python.min.js"></script>/online-->
+  <!--online<script defer type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/mode/python/python.min.js"></script>/online-->
+
+  <!--offline-->--> <script type="text/javascript" src="offline/codemirror-5.8.0/mode/clike/clike.js"></script> <!--<!--/offline-->
 
   <script type="text/javascript" src="src/blockly/blockly_compressed.js"></script>
   <script type="text/javascript" src="src/blockly/blocks_compressed.js"></script>
@@ -606,6 +625,9 @@
   <script type="text/javascript" src="src/blockly_msg/fr.js"></script>
   <script type="text/javascript" src="src/blockly_msg/ko.js"></script>
   <script type="text/javascript" src="src/blockly_msg/cn.js"></script>
+  <script type="text/javascript" src="src/blockly_msg/lt.js"></script>
+  <script type="text/javascript" src="src/blockly_msg/pl.js"></script>
+  <script type="text/javascript" src="src/blockly_msg/de.js"></script>
   <script type="text/javascript" defer src="src/blockly/python_compressed.js"></script>
 
   <script type="text/javascript" src="build/reeborg.js" defer></script>
@@ -622,7 +644,7 @@
     <h3 id="help"></h3>
     <ul>
       <li id="documentation"></li>
-      <li><a href="http://www.reddit.com/r/reeborg"><span id="forum"></span></a></li>
+      <li><a href="//www.reddit.com/r/reeborg"><span id="forum"></span></a></li>
       <li id="python-help"></li>
       <li id="keyboard-help"></li>
       <li><a href="https://github.com/aroberge/reeborg/issues"><span id="issues"></span></a></li>
@@ -853,6 +875,8 @@
       <button id="kbd-python-btn" class="blue-gradient"></button>
       <button id="kbd-py-console-btn" class="blue-gradient"></button>
       <button id="kbd-javascript-btn" class="blue-gradient"></button>
+      <button id="kbd-coffee-btn" class="blue-gradient"></button>
+      <button id="kbd-cpp-btn" class="blue-gradient"></button>
       <button id="kbd-objects-btn" class="blue-gradient"></button>
       <button id="kbd-special-btn" class="blue-gradient"></button>
       <ul class="kbd-command">
@@ -947,6 +971,46 @@
         <li id="kbd-js-continue"></li>
         <li id="kbd-js-break"></li>
       </ul>
+      <ul class="kbd-coffee">
+        <li id="kbd-coffee-function"></li>
+        <li id="kbd-coffee-if"></li>
+        <li id="kbd-coffee-else"></li>
+        <li id="kbd-coffee-ternary"></li>
+        <li id="kbd-coffee-while"></li>
+        <li id="kbd-coffee-for"></li>
+        <li id="kbd-coffee-true"></li>
+        <li id="kbd-coffee-false"></li>
+        <li id="kbd-coffee-write"></li>
+        <li id="kbd-coffee-undefined"></li>
+        <li id="kbd-coffee-not"></li>
+        <li id="kbd-coffee-and"></li>
+        <li id="kbd-coffee-or"></li>
+        <li id="kbd-coffee-continue"></li>
+        <li id="kbd-coffee-break"></li>
+      </ul>
+      <ul class="kbd-cpp">
+        <li id="kbd-cpp-boiler"></li>
+        <li id="kbd-cpp-include"></li>
+        <li id="kbd-cpp-include-reeborg"></li>
+        <li id="kbd-cpp-int"></li>
+        <li id="kbd-cpp-double"></li>
+        <li id="kbd-cpp-string"></li>
+        <li id="kbd-cpp-bool"></li>
+        <li id="kbd-cpp-function"></li>
+        <li id="kbd-cpp-if"></li>
+        <li id="kbd-cpp-else"></li>
+        <li id="kbd-cpp-while"></li>
+        <li id="kbd-cpp-for"></li>
+        <li id="kbd-cpp-true"></li>
+        <li id="kbd-cpp-false"></li>
+        <li id="kbd-cpp-write"></li>
+        <li id="kbd-cpp-return"></li>
+        <li id="kbd-cpp-not"></li>
+        <li id="kbd-cpp-and"></li>
+        <li id="kbd-cpp-or"></li>
+        <li id="kbd-cpp-continue"></li>
+        <li id="kbd-cpp-break"></li>
+      </ul>
       <ul class="kbd-objects">
         <li id="kbd-token"><img src="src/images/token.png"></li>
         <li id="kbd-apple"><img src="src/images/apple.png"></li>
@@ -985,18 +1049,5 @@
     </div>
   </div>
 
-  <!--online
-  <script type="text/javascript">
-    var clicky_site_ids = clicky_site_ids || [];
-    clicky_site_ids.push(100788691);
-    (function() {
-      var s = document.createElement('script');
-      s.type = 'text/javascript';
-      s.async = true;
-      s.src = '//static.getclicky.com/js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
-    })();
-  </script>
-  /online-->
 </body>
 </html>

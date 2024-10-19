@@ -17,15 +17,16 @@ def transform(text):
     for line in text.splitlines():
         stripped = line.strip()
         if stripped.startswith(loop_keyword):
+            stripped = stripped.split("#")[0] # remove any comment.
             if ':' in stripped:
                 stripped = stripped.replace(loop_keyword, '')
                 stripped = stripped.replace(':', '')
                 index = line.find(loop_keyword)
                 try:
                     n = int(stripped)
-                    line = ' '*index + 'for ' + var_names.pop() + ' in range(%d):' % n
+                    line = ' '*index + 'for ' + var_names.pop() + ' in range(%s):' % n
                 except:  # make sure we capture everything so as to avoid
-                         # exposing weird error messages to students.
+                        # exposing weird error messages to students.
                     pass
         processed_lines.append(line)
     result = '\n'.join(processed_lines)

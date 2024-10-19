@@ -39,7 +39,7 @@ give_object = function () {
     give_number_result = parseInt($("#input-give-number").val(), 10);
     unlimited_number_result = $("#unlimited-number").prop("checked");
     if (unlimited_number_result){
-        query = Infinity;
+        query = "infinite";
     } else {
         query = give_number_result;
     }
@@ -81,13 +81,15 @@ RUR.give_object_to_robot = function (obj, nb, robot) {
     RUR.utils.ensure_key_for_obj_exists(robot, "objects");
 
     _nb = RUR.utils.filterInt(nb); // required for the menu-driven world editor
-    if (_nb >= 0) {
+    if (_nb == "infinite") {
+        robot.objects[obj] = _nb;
+    } else if (_nb >= 0) {
         if (_nb !== 0) {
             robot.objects[obj] = _nb;
         } else if (robot.objects[obj] !== undefined) {
             delete robot.objects[obj];
         }
     } else {
-        RUR.show_feedback("#Reeborg-shouts", nb + RUR.translate(" is not a valid value!"));
+        RUR.show_feedback("#Reeborg-failure", nb + RUR.translate(" is not a valid value!"));
     }
 };
